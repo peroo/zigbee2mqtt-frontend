@@ -26,10 +26,17 @@ const Numeric: FunctionComponent<NumericProps> = (props) => {
         minimal,
     } = props;
     if (access & FeatureAccessMode.ACCESS_WRITE) {
+        let value = deviceState[property];
+        if (typeof value === 'string' && presets) {
+            const matchingPreset = presets.find(p => p.name === value);
+            if (matchingPreset)
+                value = matchingPreset.value;
+        }
+
         return (
             <RangeEditor
                 onChange={(value) => onChange(endpoint as Endpoint, { [property]: value })}
-                value={(deviceState[property] ?? '') as number}
+                value={value}
                 min={valueMin}
                 max={valueMax}
                 step={valueStep}
